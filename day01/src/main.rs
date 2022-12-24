@@ -17,5 +17,7 @@ fn main() {
             }
         }
     }
-    println!("{}", elves.iter().max().unwrap());
+    elves.sort_unstable();
+    elves.reverse();
+    println!("{}", elves[0..3].iter().sum::<i32>());
 }

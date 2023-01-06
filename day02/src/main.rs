@@ -14,6 +14,11 @@ enum Moves {
     Paper,
     Scissors
 }
+enum Results {
+    Loss,
+    Draw,
+    Win,
+}
 
 fn main() {
     let mut total_score = 0;
@@ -28,9 +33,9 @@ fn main() {
 
 }
 
-fn read_strategy(strategy: &str) -> Option<(Moves, Moves)> {
+fn read_strategy(strategy: &str) -> Option<(Moves, Results)> {
     let mut strategy_iter = strategy.chars();
-    let mut moves = (Moves::Rock, Moves::Rock);
+    let mut moves = (Moves::Rock, Results::Loss);
     if let Some(move_choice) = strategy_iter.next() { 
         if move_choice == 'A' {
             moves.0 = Moves::Rock;
@@ -47,11 +52,11 @@ fn read_strategy(strategy: &str) -> Option<(Moves, Moves)> {
     strategy_iter.next();
     if let Some(move_choice) = strategy_iter.next() {
         if move_choice == 'X' {
-            moves.1 = Moves::Rock;
+            moves.1 = Results::Loss;
         } else if move_choice == 'Y' {
-            moves.1 = Moves::Paper;
+            moves.1 = Results::Draw;
         } else if move_choice == 'Z' {
-            moves.1 = Moves::Scissors;
+            moves.1 = Results::Win;
         } else {
             return None;
         }
@@ -62,24 +67,17 @@ fn read_strategy(strategy: &str) -> Option<(Moves, Moves)> {
     
 }
 
-fn score_game((opponent, your): (Moves, Moves)) -> i32 {
-    match your {
-        Moves::Rock => ROCK_SCORE + match opponent {
-            Moves::Rock => DRAW_SCORE,
-            Moves::Paper => LOSS_SCORE,
-            Moves::Scissors => WIN_SCORE,
-        },
-        Moves::Paper => PAPER_SCORE + match opponent {
-            Moves::Rock => WIN_SCORE,
-            Moves::Paper => DRAW_SCORE,
-            Moves::Scissors => LOSS_SCORE,
-            
-        },
-        Moves::Scissors =>  SCISSORS_SCORE + match opponent {
-            Moves::Rock => LOSS_SCORE,
-            Moves::Paper => WIN_SCORE,
-            Moves::Scissors => DRAW_SCORE,
-        },
+fn score_game((opponent, your): (Moves, Results)) -> i32 {
+    match (opponent, your) {
+        (Moves::Rock, Results::Loss) => LOSS_SCORE + SCISSORS_SCORE,
+        (Moves::Rock, Results::Draw) => DRAW_SCORE + ROCK_SCORE,
+        (Moves::Rock, Results::Win) => WIN_SCORE + PAPER_SCORE,
+        (Moves::Paper, Results::Loss) => LOSS_SCORE + ROCK_SCORE,
+        (Moves::Paper, Results::Draw) => DRAW_SCORE + PAPER_SCORE,
+        (Moves::Paper, Results::Win) => WIN_SCORE + SCISSORS_SCORE,
+        (Moves::Scissors, Results::Loss) => LOSS_SCORE + PAPER_SCORE,
+        (Moves::Scissors, Results::Draw) => DRAW_SCORE + SCISSORS_SCORE,
+        (Moves::Scissors, Results::Win) => WIN_SCORE + ROCK_SCORE,
     }
 }
 

@@ -8,7 +8,7 @@ fn main() {
         for assignment in assignments {
             if let Ok(line) = assignment {
                 let endpts: Vec<i32> = line.split(&['-', ',']).map(|num| num.parse().unwrap()).collect();
-                ctr += match fully_contains(endpts[0], endpts[1], endpts[2], endpts[3]) {
+                ctr += match overlaps(endpts[0], endpts[1], endpts[2], endpts[3]) {
                     true => 1,
                     false => 0,
                 }
@@ -18,10 +18,13 @@ fn main() {
     println!("{}", ctr);
 }
 
-fn fully_contains(first_lower_bound: i32, first_upper_bound: i32, second_lower_bound: i32, second_upper_bound: i32) -> bool
-{
+fn fully_contains(first_lower_bound: i32, first_upper_bound: i32, second_lower_bound: i32, second_upper_bound: i32) -> bool {
     (first_lower_bound <= second_lower_bound && first_upper_bound >= second_upper_bound) || (first_lower_bound >= second_lower_bound && first_upper_bound <= second_upper_bound)
 }
+
+fn overlaps(flb: i32, fub: i32, slb: i32, sub: i32) -> bool {
+    !(flb > sub || slb > fub)
+} 
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where P: AsRef<Path>, {

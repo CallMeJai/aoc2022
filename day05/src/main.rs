@@ -36,10 +36,14 @@ fn main() {
 }
 
 fn crane (num_crates: i32, start_stack: usize, end_stack: usize, stacks: &mut Vec<Vec<char>>) {
+        let mut temp_vec = Vec::new();
         for _ in 0..num_crates {
-            let temp_char = stacks[start_stack - 1].pop().unwrap();
-            stacks[end_stack - 1].push(temp_char);
+            temp_vec.push(stacks[start_stack - 1].pop().unwrap());
         }
+        for _ in 0..num_crates {
+            stacks[end_stack - 1].push(temp_vec.pop().unwrap());
+        }
+        
     }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
